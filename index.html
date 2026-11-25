@@ -2,6 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<!-- Content-Security-Policy delivered via meta tag (GitHub Pages cannot set response headers).
+     Meta CSP cannot deliver frame-ancestors, and X-Frame-Options, Strict-Transport-Security (HSTS)
+     and X-Content-Type-Options cannot be set via meta at all; those require real HTTP headers
+     (e.g. a Cloudflare Transform Rule in front of GitHub Pages). Keep scripts in /assets/*.js:
+     inline <script> blocks and on* attributes are blocked by script-src 'self'. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; connect-src 'self'; manifest-src 'self'; frame-src https://docs.google.com; form-action https://docs.google.com; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Summit Club 64 | Network Intelligence &amp; Career Mapping</title>
 <meta name="description" content="Private professional network intelligence, career mapping, and managed network support for U.S. technology leaders, founders, and operators.">
@@ -197,7 +203,7 @@ footer{border-top:1px solid var(--border);padding:40px 56px;display:flex;align-i
   </a>
   <div class="nav-actions">
     <a class="btn member-login" href="/login.html">Member Login</a>
-    <button class="btn btn-ghost" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">The Club</button>
+    <button class="btn btn-ghost" id="services-button" type="button">The Club</button>
   </div>
 </nav>
 
@@ -255,63 +261,6 @@ footer{border-top:1px solid var(--border);padding:40px 56px;display:flex;align-i
   <div class="footer-copy">&copy; 2026 Summit Club 64 &middot; Boulder, Colorado &middot; smtc64.com</div>
 </footer>
 
-<script>
-const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}});},{threshold:0.12});
-document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
-const canvas=document.getElementById('network-canvas');
-if(canvas){
-  const ctx=canvas.getContext('2d');
-  const nodes=[];
-  let width=0,height=0,raf=0;
-  function resizeCanvas(){
-    const ratio=window.devicePixelRatio||1;
-    width=canvas.clientWidth;
-    height=canvas.clientHeight;
-    canvas.width=width*ratio;
-    canvas.height=height*ratio;
-    ctx.setTransform(ratio,0,0,ratio,0,0);
-    nodes.length=0;
-    const count=Math.max(34,Math.floor(width/26));
-    for(let i=0;i<count;i++){
-      nodes.push({x:Math.random()*width,y:Math.random()*height,vx:(Math.random()-.5)*0.28,vy:(Math.random()-.5)*0.28,r:Math.random()*1.8+1.2});
-    }
-  }
-  function drawNetwork(){
-    ctx.clearRect(0,0,width,height);
-    const grad=ctx.createLinearGradient(0,0,width,height);
-    grad.addColorStop(0,'rgba(127,184,207,0.18)');
-    grad.addColorStop(0.52,'rgba(217,238,243,0.10)');
-    grad.addColorStop(1,'rgba(248,244,230,0.10)');
-    ctx.fillStyle=grad;
-    ctx.fillRect(0,0,width,height);
-    for(const node of nodes){
-      node.x+=node.vx;node.y+=node.vy;
-      if(node.x<0||node.x>width)node.vx*=-1;
-      if(node.y<0||node.y>height)node.vy*=-1;
-    }
-    for(let i=0;i<nodes.length;i++){
-      for(let j=i+1;j<nodes.length;j++){
-        const a=nodes[i],b=nodes[j],dx=a.x-b.x,dy=a.y-b.y,dist=Math.hypot(dx,dy);
-        if(dist<150){
-          ctx.strokeStyle=`rgba(217,238,243,${(1-dist/150)*0.18})`;
-          ctx.lineWidth=1;
-          ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
-        }
-      }
-    }
-    for(const node of nodes){
-      ctx.fillStyle='rgba(248,244,230,0.8)';
-      ctx.beginPath();ctx.arc(node.x,node.y,node.r,0,Math.PI*2);ctx.fill();
-    }
-    raf=requestAnimationFrame(drawNetwork);
-  }
-  resizeCanvas();
-  drawNetwork();
-  window.addEventListener('resize',()=>{cancelAnimationFrame(raf);resizeCanvas();drawNetwork();});
-}
-document.querySelectorAll('.modal-overlay').forEach(overlay=>{overlay.addEventListener('click',function(e){if(e.target===this)closeModal(this.id);});});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.modal-overlay.open').forEach(m=>closeModal(m.id));}});
-if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'));}
-</script>
+<script src="/assets/site.js"></script>
 </body>
 </html>
