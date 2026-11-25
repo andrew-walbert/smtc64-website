@@ -2,6 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<!-- Content-Security-Policy delivered via meta tag (GitHub Pages cannot set response headers).
+     Meta CSP cannot deliver frame-ancestors, and X-Frame-Options, Strict-Transport-Security (HSTS)
+     and X-Content-Type-Options cannot be set via meta at all; those require real HTTP headers
+     (e.g. a Cloudflare Transform Rule in front of GitHub Pages). Keep scripts in /assets/*.js:
+     inline <script> blocks and on* attributes are blocked by script-src 'self'. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; connect-src 'self'; manifest-src 'self'; frame-src https://docs.google.com; form-action https://docs.google.com; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Member Login | Summit Club 64</title>
 <meta name="description" content="Sign in to your Summit Club 64 member workspace.">
